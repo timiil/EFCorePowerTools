@@ -5,6 +5,7 @@ using NuGet.ProjectModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -28,17 +29,17 @@ namespace EFCorePowerTools.Handlers
 
         public Task<string> GetOutputAsync(string outputPath, string projectPath, GenerationType generationType, string contextName, string migrationIdentifier, string nameSpace)
         {
-            return GetOutputInternalAsync(outputPath, projectPath, generationType, contextName, migrationIdentifier, nameSpace);
+            return GetOutputInternalAsync(outputPath, projectPath, generationType, contextName, migrationIdentifier, nameSpace, 0);
         }
 
-        public Task<string> GetOutputAsync(string outputPath, GenerationType generationType, string contextNames, string connectionString)
+        public Task<string> GetOutputAsync(string outputPath, GenerationType generationType, string contextNames, string connectionString, int databaseType = 0)
         {
-            return GetOutputInternalAsync(outputPath, null, generationType, contextNames, connectionString, null);
+            return GetOutputInternalAsync(outputPath, null, generationType, contextNames, connectionString, null, databaseType);
         }
 
         public Task<string> GetOutputAsync(string outputPath, GenerationType generationType, string contextName)
         {
-            return GetOutputInternalAsync(outputPath, null, generationType, contextName, null, null);
+            return GetOutputInternalAsync(outputPath, null, generationType, contextName, null, null, 0);
         }
 
         public List<Tuple<string, string>> BuildModelResult(string modelInfo)
@@ -61,7 +62,7 @@ namespace EFCorePowerTools.Handlers
             return result;
         }
 
-        private async Task<string> GetOutputInternalAsync(string outputPath, string projectPath, GenerationType generationType, string contextName, string migrationIdentifier, string nameSpace)
+        private async Task<string> GetOutputInternalAsync(string outputPath, string projectPath, GenerationType generationType, string contextName, string migrationIdentifier, string nameSpace, int databaseType)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -113,7 +114,7 @@ namespace EFCorePowerTools.Handlers
                     startInfo.Arguments = "contextlist" + outputs;
                     break;
                 case GenerationType.DbContextCompare:
-                    startInfo.Arguments = "schemacompare" + outputs + "\"" + migrationIdentifier + "\" " + contextName;
+                    startInfo.Arguments = "schemacompare" + outputs + "\"" + migrationIdentifier + "\" \"" + contextName + "\" " + databaseType.ToString(CultureInfo.InvariantCulture);
                     break;
                 default:
                     break;

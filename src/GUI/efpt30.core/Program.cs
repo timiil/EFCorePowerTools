@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,9 +32,9 @@ namespace Modelling
                     {
                         result = compareBuilder.GenerateDbContextList(args[1], args[2]);
                     }
-                    else if (args.Contains("schemacompare") && args.Count() >= 5)
+                    else if (args.Contains("schemacompare") && args.Count() >= 6)
                     {
-                        result = compareBuilder.GenerateSchemaCompareResult(args[1], args[2], args[3], args[4]);
+                        result = compareBuilder.GenerateSchemaCompareResult(args[1], args[2], args[3], args[4], int.Parse(args[5], CultureInfo.InvariantCulture));
                     }
 #endif
                     else if (args.Contains("migrationstatus") && args.Count() >= 3)

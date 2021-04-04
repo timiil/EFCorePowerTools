@@ -6,6 +6,7 @@ using EFCorePowerTools.Shared.Models;
 using EnvDTE;
 using Microsoft.VisualStudio.Data.Services;
 using Microsoft.VisualStudio.Shell;
+using RevEng.Shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -121,7 +122,8 @@ namespace EFCorePowerTools.Handlers.Compare
                     outputPath,
                     project,
                     pickDataSourceResult.Payload.Connection, 
-                    pickDataSourceResult.Payload.ContextTypes.ToArray());
+                    pickDataSourceResult.Payload.ContextTypes.ToArray(),
+                    pickDataSourceResult.Payload.Connection.DatabaseType);
                 timer.Stop();
                 _package.Dte2.StatusBar.Animate(false, icon);
                 _package.Dte2.StatusBar.Text = String.Format(CompareLocale.CompareCompletedIn, timer.Elapsed.ToString("h\\:mm\\:ss"));
@@ -184,11 +186,12 @@ namespace EFCorePowerTools.Handlers.Compare
         private async Task<IEnumerable<CompareLogModel>> GetComparisonResultAsync(string outputPath, 
             Project project, 
             DatabaseConnectionModel connection, 
-            string[] contextNames)
+            string[] contextNames,
+            DatabaseType databaseType)
         {
             var processLauncher = new ProcessLauncher(project);
 
-            var processResult = await processLauncher.GetOutputAsync(outputPath, GenerationType.DbContextCompare, string.Join(",", contextNames), connection.ConnectionString);
+            var processResult = await processLauncher.GetOutputAsync(outputPath, GenerationType.DbContextCompare, string.Join(",", contextNames), connection.ConnectionString, (int)databaseType);
 
             if (string.IsNullOrEmpty(processResult))
             {

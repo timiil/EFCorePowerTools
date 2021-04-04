@@ -2,6 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Design.Internal;
+using Microsoft.EntityFrameworkCore.Sqlite.Design.Internal;
+using Microsoft.EntityFrameworkCore.SqlServer.Design.Internal;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Design.Internal;
+using Pomelo.EntityFrameworkCore.MySql.Design.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,13 +21,13 @@ namespace Modelling
             return BuildResult(outputPath, startupOutputPath ?? outputPath, true);
         }
 
-        public List<Tuple<string, string>> GenerateSchemaCompareResult(string outputPath, string startupOutputPath, string connectionString, string dbContexts)
+        public List<Tuple<string, string>> GenerateSchemaCompareResult(string outputPath, string startupOutputPath, string connectionString, string dbContexts, int dbType)
         {
             
-            return GetCompareResult(outputPath, startupOutputPath ?? outputPath, connectionString, dbContexts);
+            return GetCompareResult(outputPath, startupOutputPath ?? outputPath, connectionString, dbContexts, dbType);
         }
 
-        private List<Tuple<string, string>> GetCompareResult(string outputPath, string startupOutputPath, string connectionString, string dbContexts)
+        private List<Tuple<string, string>> GetCompareResult(string outputPath, string startupOutputPath, string connectionString, string dbContexts, int dbTypeInt)
         {
             var result = new List<Tuple<string, string>>();
 
@@ -52,8 +56,28 @@ namespace Modelling
 
             var comparer = new CompareEfSql();
 
-            comparer.CompareEfWithDb(connectionString, dbContextList.ToArray());
+            switch (dbTypeInt)
+            {
+                case 3:
+                    comparer.CompareEfWithDb<SqlServerDesignTimeServices>(connectionString, dbContextList.ToArray());
+                    break;
 
+                case 4:
+                    comparer.CompareEfWithDb<SqliteDesignTimeServices>(connectionString, dbContextList.ToArray());
+                    break;
+
+                case 5:
+                    comparer.CompareEfWithDb<MySqlDesignTimeServices>(connectionString, dbContextList.ToArray());
+                    break;
+
+                case 6:
+                    comparer.CompareEfWithDb<NpgsqlDesignTimeServices>(connectionString, dbContextList.ToArray());
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException($"Unsupported database type: {dbTypeInt}");
+            }
+        
             var logsJson = Newtonsoft.Json.JsonConvert.SerializeObject(comparer.Logs);
 
             result.Add(new Tuple<string, string>(dbContextNameList.First(), logsJson));
