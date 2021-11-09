@@ -189,12 +189,12 @@ namespace EFCorePowerTools.Extensions
             return await IsNetCore31Async(project) || await IsNet50Async(project) || await IsNet60Async(project);
         }
 
-        private static async Task<bool> IsNetCore31Async(this Project project)
+        public static async Task<bool> IsNetCore31Async(this Project project)
         {
             return (await project.GetAttributeAsync("TargetFrameworkMoniker"))?.Contains(".NETCoreApp,Version=v3.1") ?? false;
         }
 
-        public static async Task<bool> IsNet50Async(this Project project)
+        private static async Task<bool> IsNet50Async(this Project project)
         {
             return (await project.GetAttributeAsync("TargetFrameworkMoniker"))?.Contains(".NETCoreApp,Version=v5.0") ?? false;
         }
@@ -213,7 +213,6 @@ namespace EFCorePowerTools.Extensions
 
             return absoluteOutputPath;
         }
-
 
         public static List<string> GenerateFiles(this Project _, List<Tuple<string, string>> result, string extension)
         {

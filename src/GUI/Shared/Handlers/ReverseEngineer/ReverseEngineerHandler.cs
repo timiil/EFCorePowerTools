@@ -165,16 +165,16 @@ namespace EFCorePowerTools.Handlers.ReverseEngineer
 
                 if (options.InstallNuGetPackage && (!onlyGenerate || forceEdit) && await project.IsNetCore31OrHigherAsync())
                 {
-                    var version = "3.1.*";
+                    var version = "5.0.0";
 
-                    if (await project.IsNet50Async())
+                    if (await project.IsNetCore31Async())
                     {
-                        version = "5.0.*";
+                        version = "3.1.0";
                     }
 
                     if (await project.IsNet60Async())
                     {
-                        version = "6.0.*";
+                        version = "6.0.0";
                     }
 
                     await VS.StatusBar.ShowMessageAsync(ReverseEngineerLocale.InstallingEFCoreProviderPackage);
