@@ -165,10 +165,22 @@ namespace EFCorePowerTools.Handlers.ReverseEngineer
 
                 if (options.InstallNuGetPackage && (!onlyGenerate || forceEdit) && await project.IsNetCore31OrHigherAsync())
                 {
+                    var version = "3.1.*";
+
+                    if (await project.IsNet50Async())
+                    {
+                        version = "5.0.*";
+                    }
+
+                    if (await project.IsNet60Async())
+                    {
+                        version = "6.0.*";
+                    }
+
                     await VS.StatusBar.ShowMessageAsync(ReverseEngineerLocale.InstallingEFCoreProviderPackage);
                     var nuGetHelper = new NuGetHelper();
                        
-                    await nuGetHelper.InstallPackageAsync(containsEfCoreReference.Item2, project);
+                    await nuGetHelper.InstallPackageAsync(containsEfCoreReference.Item2, project, version);
                 }
 
                 Telemetry.TrackEvent("PowerTools.ReverseEngineer");

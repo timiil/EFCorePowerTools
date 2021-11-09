@@ -194,12 +194,12 @@ namespace EFCorePowerTools.Extensions
             return (await project.GetAttributeAsync("TargetFrameworkMoniker"))?.Contains(".NETCoreApp,Version=v3.1") ?? false;
         }
 
-        private static async Task<bool> IsNet50Async(this Project project)
+        public static async Task<bool> IsNet50Async(this Project project)
         {
             return (await project.GetAttributeAsync("TargetFrameworkMoniker"))?.Contains(".NETCoreApp,Version=v5.0") ?? false;
         }
 
-        private static async Task<bool> IsNet60Async(this Project project)
+        public static async Task<bool> IsNet60Async(this Project project)
         {
             return (await project.GetAttributeAsync("TargetFrameworkMoniker"))?.Contains(".NETCoreApp,Version=v6.0") ?? false;
         }

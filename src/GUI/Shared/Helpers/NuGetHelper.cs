@@ -8,12 +8,12 @@ namespace EFCorePowerTools.Helpers
 {
     public class NuGetHelper
     {
-        public async Task<bool> InstallPackageAsync(string packageId, Project project, Version version = null)
+        public async Task<bool> InstallPackageAsync(string packageId, Project project, string version = null)
         {
             var args = $"add {project.FullPath} package {packageId} ";
             if (version != null)
             {
-                args += "-v" + version.ToString(3);
+                args += "-v" + version;
             }
 
             var startInfo = new ProcessStartInfo

@@ -59,7 +59,7 @@ namespace EFCorePowerTools.Handlers
                 if (!result.Item1)
                 {
                     var nugetHelper = new NuGetHelper();
-                    await nugetHelper.InstallPackageAsync("Microsoft.EntityFrameworkCore.Design", project, version);
+                    await nugetHelper.InstallPackageAsync("Microsoft.EntityFrameworkCore.Design", project, version.ToString(3));
                     VSHelper.ShowError(string.Format(SharedLocale.InstallingEfCoreDesignPackage, version));
                     return;
                 }
