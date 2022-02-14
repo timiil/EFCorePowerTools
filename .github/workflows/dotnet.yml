@@ -1,4 +1,4 @@
-name: dotnet6 build and push to nuget
+name: build RevEng60 and push to nuget
 
 on:
   push:
@@ -16,15 +16,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.101
-    - name: 安装依赖
-      run: dotnet restore
-    - name: 构建
-      run: dotnet build --configuration Release --no-restore    
-    - name: 安装nuget 
+    #- name: Build
+    #  run: dotnet build ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj --configuration Release      
+    - name: Install Nuget
       uses: nuget/setup-nuget@v1
       with:        
         nuget-version: '5.x'
-    - name: 发布生成包到github和nuget
+    - name: Push To Nuget
       run: |
-        nuget push ./bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NugetKey }} -NoSymbol
+        nuget pack ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj -IncludeReferencedProjects -Version 2022.2.14
+        #nuget push ./bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NugetKey }} -NoSymbol
         # nuget push ./bin/Release/*.nupkg -Source github -SkipDuplicate
