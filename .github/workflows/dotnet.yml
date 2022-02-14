@@ -20,9 +20,9 @@ jobs:
       uses: nuget/setup-nuget@v1
       with:        
         nuget-version: '5.x'    
-    - name: Build and Push
-      run: |
-        dotnet build ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj --configuration Release      
-        nuget pack ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj -IncludeReferencedProjects -Version 2022.2.14
+    - name: Pack and Push
+      run: |        
+        #dotnet build ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj --configuration Release      
+        nuget pack ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj -IncludeReferencedProjects -Build -Symbols -Properties Configuration=Release -Version 2022.2.14 
         #nuget push ./bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NugetKey }} -NoSymbol
         # nuget push ./bin/Release/*.nupkg -Source github -SkipDuplicate
