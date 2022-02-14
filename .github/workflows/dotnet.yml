@@ -15,9 +15,7 @@ jobs:
     - name: Setup Env
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.101
-    - name: Get today string  
-      uses: DanielRNDev/get-today@v1.0.2
+        dotnet-version: 6.0.101    
     - name: Install Nuget
       uses: nuget/setup-nuget@v1
       with:        
@@ -26,5 +24,5 @@ jobs:
       run: |        
         dotnet build ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj --configuration Release      
         nuget pack ./src/GUI/RevEng.Core.60/RevEng.Core.60.csproj -IncludeReferencedProjects -Symbols -Properties Configuration=Release -Version $(date "+%Y").$(date "+%m").$(date "+%H%M")        
-        nuget push ./*.nupkg -Source github -SkipDuplicate -ApiKey ${{ secrets.NUGETKEY }} -NoSymbol        
-        # nuget push ./*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETKEY }} -NoSymbol
+        # nuget push ./*.nupkg -Source github -SkipDuplicate -ApiKey ${{ secrets.NUGETKEY }} -NoSymbol        
+        nuget push ./*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETKEY }} -NoSymbol
